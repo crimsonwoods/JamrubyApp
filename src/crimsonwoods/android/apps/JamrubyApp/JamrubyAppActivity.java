@@ -19,6 +19,8 @@ import android.widget.TextView;
 public class JamrubyAppActivity extends Activity {
 	private static final String STATE_EXTRA_SCRIPTS = "scripts";
 	private static final String STATE_EXTRA_RESULT = "result";
+	private Thread stdout;
+	private Thread stderr;
 	
     /** Called when the activity is first created. */
     @Override
@@ -42,13 +44,38 @@ public class JamrubyAppActivity extends Activity {
 		        }
 			}
 		});
-        
-        try {
-			new StdioThread(MRuby.stdout(), "stdout:").start();
-			new StdioThread(MRuby.stderr(), "stderr:").start();
-		} catch (IOException e) {
-			Log.e(e, "Can not get stdio.");
-		}
+    }
+    
+    @Override
+    protected void onPause() {
+    	try {
+    		super.onPause();
+    	} finally {
+	    	if (null != stdout) {
+	    		stdout.interrupt();
+	    		stdout = null;
+	    	}
+	    	if (null != stderr) {
+	    		stderr.interrupt();
+	    		stderr = null;
+	    	}
+    	}
+    }
+    
+    @Override
+    protected void onResume() {
+    	try {
+    		super.onResume();
+    	} finally {
+	    	try {
+				stdout = new StdioThread(MRuby.stdout(), "stdout:");
+				stderr = new StdioThread(MRuby.stderr(), "stderr:");
+				stdout.start();
+				stderr.start();
+			} catch (IOException e) {
+				Log.e(e, "Can not get stdio.");
+			}
+    	}
     }
     
     @Override
