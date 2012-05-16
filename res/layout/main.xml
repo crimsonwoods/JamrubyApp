@@ -15,16 +15,19 @@
     <Button
         android:id="@+id/button_run"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
+        android:layout_height="60dp"
         android:text="@string/button_text_run" />
-    <TextView
-        android:id="@+id/textview_result"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.3"
-        android:text=""
-        android:background="#666666"
-        android:clickable="false" />
+        android:background="#333333">
+	    <TextView
+	        android:id="@+id/textview_result"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text=""
+	        android:singleLine="false" />
+    </ScrollView>
 
 </LinearLayout>

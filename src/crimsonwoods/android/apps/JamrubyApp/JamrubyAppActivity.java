@@ -38,7 +38,7 @@ public class JamrubyAppActivity extends Activity {
 				final Jamruby jamruby = new Jamruby();
 		        try {
 		        	final Value ret = jamruby.run(etScript.getText().toString());
-		        	tvResult.setText(ret.toString());
+		        	tvResult.setText(ret.toString(jamruby.state()));
 		        } finally {
 		        	jamruby.close();
 		        }
