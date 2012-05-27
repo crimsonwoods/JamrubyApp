@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import crimsonwoods.android.apps.JamrubyApp.R;
-import crimsonwoods.android.libs.jamruby.Jamruby;
-import crimsonwoods.android.libs.jamruby.mruby.MRuby;
-import crimsonwoods.android.libs.jamruby.mruby.Value;
+import org.jamruby.core.Jamruby;
+import org.jamruby.mruby.MRuby;
+import org.jamruby.mruby.Value;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
