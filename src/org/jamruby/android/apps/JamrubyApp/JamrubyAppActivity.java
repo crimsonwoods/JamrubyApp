@@ -1,4 +1,4 @@
-package crimsonwoods.android.apps.JamrubyApp;
+package org.jamruby.android.apps.JamrubyApp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,25 +8,31 @@ import java.io.InputStreamReader;
 import crimsonwoods.android.apps.JamrubyApp.R;
 import org.jamruby.core.Jamruby;
 import org.jamruby.mruby.MRuby;
+import org.jamruby.mruby.ParserState;
 import org.jamruby.mruby.Value;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class JamrubyAppActivity extends Activity {
 	private static final String STATE_EXTRA_SCRIPTS = "scripts";
 	private static final String STATE_EXTRA_RESULT = "result";
 	private Thread stdout;
 	private Thread stderr;
+	private Handler handler;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        handler = new Handler();
         
         final EditText etScript = findView(R.id.edittext_ruby_scripts);
         final Button btnRun = findView(R.id.button_run);
@@ -37,8 +43,11 @@ public class JamrubyAppActivity extends Activity {
 			public void onClick(View v) {
 				final Jamruby jamruby = new Jamruby();
 		        try {
-		        	final Value ret = jamruby.run(etScript.getText().toString());
+		        	final ParserState p = jamruby.parse(etScript.getText().toString());
+		        	final Value ret = jamruby.run(p);
 		        	tvResult.setText(ret.toString(jamruby.state()));
+		        } catch (Throwable t) {
+		        	handleException(t, true);
 		        } finally {
 		        	jamruby.close();
 		        }
@@ -144,9 +153,32 @@ public class JamrubyAppActivity extends Activity {
     				}
     			}
     		} catch (Throwable t) {
-    			Log.e(t, "Uncaught exception.");
+    			handleException(t, false);
     		} finally {
     		}
+    	}
+    }
+    
+    private void handleException(Throwable t, boolean isFinish) {
+    	String msg = t.getMessage();
+    	if (null == msg || 0 == msg.length()) {
+    		final Throwable cause = t.getCause();
+    		if (null != cause) {
+    			msg = cause.getMessage();
+    		}
+    		if (null == msg || 0 == msg.length()) {
+    			msg = t.getClass().getName();
+    		}
+    	}
+    	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+    	Log.e(t, "Uncaught Exception");
+    	if (isFinish) {
+	    	handler.post(new Runnable() {
+				@Override
+				public void run() {
+					finish();
+				}
+			});
     	}
     }
 }
