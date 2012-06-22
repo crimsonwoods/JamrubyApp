@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import crimsonwoods.android.apps.JamrubyApp.R;
+import org.jamruby.android.apps.JamrubyApp.R;
 import org.jamruby.core.Jamruby;
 import org.jamruby.mruby.MRuby;
 import org.jamruby.mruby.ParserState;
 import org.jamruby.mruby.Value;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;

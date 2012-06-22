@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="edittext_text_default_script">p \&quot;Hello, mruby!\&quot;\n\&quot;</string>
+    <string name="edittext_text_default_script">p \&quot;Hello, mruby!\&quot;\n</string>
     <string name="app_name">JamrubyApp</string>
     <string name="button_text_run">Run</string>
 
